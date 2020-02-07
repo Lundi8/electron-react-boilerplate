@@ -23,6 +23,7 @@ export default class AppUpdater {
   }
 }
 
+const isDev = process.env.NODE_ENV !== 'production';
 let mainWindow = null;
 
 if (process.env.NODE_ENV === 'production') {
@@ -57,13 +58,16 @@ const createWindow = async () => {
 
   mainWindow = new BrowserWindow({
     show: false,
-    width: 1024,
-    height: 728,
+    x: isDev ? 1920 : 0,
+    y: 0,
+    autoHideMenuBar: !isDev,
+    fullscreen: true,
     webPreferences: {
       nodeIntegration: true
     }
   });
 
+  if (isDev) mainWindow.webContents.openDevTools();
   mainWindow.loadURL(`file://${__dirname}/app.html`);
 
   // @TODO: Use 'ready-to-show' event
